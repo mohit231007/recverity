@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RecVerity · Explainable Recommendation Engineering</title><meta name="description" content="An independent, open-source recommendation engineering lab: honest evaluation, cold-start ranking, explainability and leakage audits."/>
+<meta name="theme-color" content="#101827"/><link rel="stylesheet" href="./styles.css"/></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="layout">
+<aside class="sidebar"><a href="#overview" class="brand"><span class="brandicon">R.</span><span>RECVERITY<small>RECOMMENDATION ENGINEERING</small></span></a>
+<div class="side-label">WORKBENCH</div>
+<nav aria-label="Main navigation">
+<a href="#overview" data-tab="overview">⌂ &nbsp; Overview</a>
+<a href="#lab" data-tab="lab">◈ &nbsp; Recommendation lab</a>
+<a href="#cold" data-tab="cold">✧ &nbsp; Cold-start discovery</a>
+<a href="#audit" data-tab="audit">▤ &nbsp; Evaluation audit</a>
+<a href="#engineering" data-tab="engineering">⌘ &nbsp; Engineering</a></nav>
+<div class="sidebar-footer"><div class="tag">Independent open source</div><p>Designed by Mohit Bhatnagar</p><small>No ads · No account · No tracking</small></div>
+</aside>
+<div class="workspace"><header class="top"><button id="menu" class="mobile-menu" type="button" aria-expanded="false" aria-controls="mobile-links">☰ Menu</button><div>RESEARCH STUDIO <span class="sep">/</span> <span id="breadcrumb">OVERVIEW</span></div><div class="top-right"><span class="live-dot"></span> BROWSER-ONLY DEMO</div></header>
+<nav id="mobile-links" class="mobile-links" hidden aria-label="Mobile navigation">
+<a href="#overview">Overview</a><a href="#lab">Recommendation lab</a><a href="#cold">Cold-start discovery</a><a href="#audit">Evaluation audit</a><a href="#engineering">Engineering</a></nav>
+<main id="main" tabindex="-1">
+<section id="overview" data-panel class="page">
+<p class="eyebrow">AN OPEN-SOURCE ENGINEERING CASE STUDY</p><h1>Recommendations worth <em>explaining.</em></h1><p class="lead">Explore a working hybrid ranking system—and the evaluation mistakes that can make weak models look extraordinary. This is a transparent research demonstration, not an Amazon production replica.</p>
+<div class="hero-actions"><a class="btn" href="#lab">Explore the ranking lab <span>↗</span></a><a class="btn muted" href="#audit">Inspect the evidence</a></div>
+<div class="stats"><div class="stat"><small>RAW SNAPSHOT RECORDS</small><strong>1,465</strong><span>Private educational source</span></div><div class="stat"><small>UNIQUE PRODUCTS</small><strong>1,351</strong><span>After SKU consolidation</span></div><div class="stat"><small>SAMPLED USERS</small><strong>9,050</strong><span>Reviewer IDs, not buyers</span></div><div class="stat"><small>STRICT ELIGIBLE USERS</small><strong>201</strong><span>Distinct review-event holdout</span></div></div>
+<h2>The headline result is a correction.</h2><div class="comparison"><div><small>NAIVE HYBRID HIT RATE@5</small><strong class="invalid">81.67%</strong><span>Contaminated by duplicate review events</span></div><b aria-hidden="true">→</b><div><small>STRICT HYBRID HIT RATE@5</small><strong class="valid">3.48%</strong><span>Review-event-decontaminated evaluation</span></div></div>
+<p class="note">The original item-level train/test split leaked the same review events across product SKUs. 749 of 911 test users were affected. The corrected benchmark is small and retrospective; it is not evidence of online click, conversion, or revenue lift.</p>
+<h2>Choose an investigation</h2><div class="tiles"><a href="#lab"><span>01 / INTERACTIVE</span><h3>Recommendation laboratory</h3><p>Compare content, collaborative, hybrid and popularity with configurable ranking constraints.</p></a><a href="#cold"><span>02 / COLD START</span><h3>Products with no reviews</h3><p>Test metadata-based discovery for entirely unseen products.</p></a><a href="#audit"><span>03 / RESEARCH</span><h3>Evaluation integrity</h3><p>See where inflated accuracy came from and what the evidence can actually support.</p></a></div>
+</section>
+<section id="lab" data-panel class="page" hidden>
+<p class="eyebrow">INTERACTIVE MODEL EXPLORER</p><h1>Ranking under <em>inspection.</em></h1><p class="lead">Every change updates a real local calculation over 72 invented products and 400 invented shopper histories. No information leaves your browser.</p>
+<div class="disclosure">SIMULATION ONLY · Demo recommendations are synthetic. Real benchmark metrics are shown separately on the evaluation page.</div>
+<div class="panel controls"><h2>Ranking controls</h2><div class="formgrid">
+<label>Shopper context <select id="persona"></select></label><label>Ranking method <select id="method"><option value="hybrid">Hybrid</option><option value="content">Content-based</option><option value="collaborative">Collaborative</option><option value="popularity">Popularity baseline</option></select></label>
+<label>Category <select id="category"></select></label><label>Maximum price <select id="budget"><option value="Infinity">No cap</option><option value="2000">₹2,000</option><option value="5000">₹5,000</option><option value="10000">₹10,000</option><option value="15000">₹15,000</option></select></label>
+</div><div class="formgrid sliders"><label>Collaborative fusion weight <span class="range-value" id="weight-value">60% CF / 40% content</span><input type="range" id="weight" min="0" max="100" value="60" step="5"/></label>
+<label>Diversity penalty <span class="range-value" id="diversity-value">18%</span><input type="range" id="diversity" min="0" max="60" value="18" step="3"/></label></div>
+<label class="inline"><input type="checkbox" id="in-stock" checked/> Only show available inventory</label></div>
+<div class="section-head"><div><h2>Top five unseen products</h2><p id="result-context"></p></div><button id="export" type="button" class="btn small secondary">Export ranking JSON ↓</button></div><div id="results" class="results" aria-live="polite"></div>
+<div class="panel"><h3>What these scores mean</h3><p>Content scores use TF-IDF on fictional metadata and price/category similarity. Collaborative scores use cosine similarity of fictional binary co-interactions. These are similarity scores, not probabilities. The hybrid's default is 0.6 × collaborative + 0.4 × content; weight changes are exploratory and not evidence of optimization.</p></div>
+</section>
+<section id="cold" data-panel class="page" hidden>
+<p class="eyebrow">PRODUCT DISCOVERY WITHOUT ENGAGEMENT</p><h1>Cold start, not <em>cold silence.</em></h1><p class="lead">A newly listed product can be recommended using content even when its observed review and co-interaction counts are zero.</p><div class="panel"><label>Choose a synthetic, unrated product <select id="new-product"></select></label><p id="cold-description" class="muted-text"></p></div><h2>Five metadata-nearest available alternatives</h2><div id="cold-results" class="results"></div>
+<p class="note">This is item cold start, not proof of user preference. A new visitor receives popularity-based fallback until real feedback exists.</p>
+</section>
+<section id="audit" data-panel class="page" hidden>
+<p class="eyebrow">RESEARCH QUALITY AND LEAKAGE</p><h1>Trust the split, <em>not the headline.</em></h1><p class="lead">The original Amazon snapshot has review IDs reused across different product SKUs. We preserve the contaminated benchmark as a warning—not a performance claim.</p>
+<div class="stats three"><div class="stat"><small>REUSED REVIEW IDS</small><strong>761</strong><span>Cross-SKU overlap</span></div><div class="stat"><small>FALSELY MULTI-ITEM USERS</small><strong>710</strong><span>One distinct review event</span></div><div class="stat"><small>STRICT HOLDOUT</small><strong>201</strong><span>Eligible reviewer histories</span></div></div>
+<div class="panel"><h2>Strict offline Hit Rate@5</h2><div class="audit-rows">
+<div><span>Content-based</span><div class="bar"><i style="width:69.6%"></i></div><b>3.48%</b></div>
+<div><span>Collaborative</span><div class="bar"><i style="width:0%"></i></div><b>0.00%</b></div>
+<div><span>Hybrid 60/40</span><div class="bar"><i style="width:69.6%"></i></div><b>3.48%</b></div>
+<div><span>Popularity</span><div class="bar"><i style="width:0%"></i></div><b>0.00%</b></div></div>
+<p class="muted-text">Bar lengths are scaled to a 5% reference, not 100%, to distinguish very small values. Hybrid offers no observed accuracy improvement over content here.</p></div>
+<div class="panel"><h2>Catalog coverage@5</h2><div class="audit-rows">
+<div><span>Content-based</span><div class="bar"><i style="width:45.37%"></i></div><b>45.37%</b></div><div><span>Collaborative</span><div class="bar"><i style="width:1.48%"></i></div><b>1.48%</b></div><div><span>Hybrid 60/40</span><div class="bar"><i style="width:45.67%"></i></div><b>45.67%</b></div><div><span>Popularity</span><div class="bar"><i style="width:.37%"></i></div><b>0.37%</b></div></div></div>
+<div class="disclosure">DATA LIMITATIONS · No per-user star ratings, purchases, impression logs, timestamps, true stock, or online treatment assignment. Product-level average ratings must never be fabricated into individual reviewer ratings.</div>
+</section>
+<section id="engineering" data-panel class="page" hidden>
+<p class="eyebrow">ARCHITECTURE AND REPRODUCIBILITY</p><h1>Transparent by <em>design.</em></h1><p class="lead">No server, API key, database, cookie banner, paid inference, analytics service or login. Synthetic interactions and metadata are generated deterministically in the browser.</p>
+<div class="tiles engineering-tiles"><div><span>01 / CONTENT</span><h3>Text and metadata</h3><p>Product-name and description TF-IDF; category and price compatibility; cosine similarity.</p></div>
+<div><span>02 / COLLABORATIVE</span><h3>Co-interaction similarity</h3><p>Binary user-item incidence, item-item cosine; undefined behavior falls back to popularity.</p></div>
+<div><span>03 / RE-RANKING</span><h3>Constraints and diversity</h3><p>Unseen-item exclusion, availability, budget/category filters, greedy redundancy penalty.</p></div>
+<div><span>04 / EVIDENCE</span><h3>Independent audit layer</h3><p>Fixed, aggregated numbers from the private research snapshot; no original user identifiers are published.</p></div></div>
+<div class="panel"><h2>Deployment architecture</h2><div class="arch">Local research → aggregated benchmark record<br/>Synthetic generator → client-side ranking engine → GitHub Pages<br/>Test suite → GitHub Actions → reviewable pull requests</div><p class="muted-text">Synthetic interaction outcomes are not an estimate of real-world lift. An improved genuine benchmark would use independently licensed per-user ratings and timestamps with chronological splits and confidence intervals.</p></div>
+<footer>RecVerity · Independent research by Mohit Bhatnagar · Not affiliated with Amazon · <a href="https://github.com/mohit231007/recverity">Source on GitHub</a></footer>
+</section></main></div></div><script type="module" src="./app.mjs"></script></body></html>

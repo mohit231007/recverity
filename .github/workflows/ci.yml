@@ -1,0 +1,31 @@
+name: Verify RecVerity
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JS modules parse
+        run: |
+          node --check web/engine.mjs
+          node --check web/app.mjs
+      - name: Run recommendation invariants
+        run: node --test tests/*.test.mjs
+      - name: Verify website files
+        run: |
+          test -f web/index.html
+          test -f web/styles.css
+          test -f web/app.mjs
+          test -f web/engine.mjs
+      - name: Guard against publishing raw dataset
+        run: |
+          test ! -f data/private/amazon.csv
+          ! find web -type f \( -iname '*.csv' -o -iname '*.parquet' -o -iname '*.ipynb' \) | grep .
