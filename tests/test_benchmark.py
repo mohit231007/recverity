@@ -5,7 +5,8 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from research.benchmark import Event, Ranker, bootstrap_interval, chronological_split, load_ratings, run
+from research.benchmark import (Event, Ranker, bootstrap_interval, chronological_split, load_ratings,
+                                run, ks_distance, distribution_psi, bootstrap_difference)
 
 
 class TestBenchmark(unittest.TestCase):
@@ -51,6 +52,22 @@ class TestBenchmark(unittest.TestCase):
             self.assertGreater(report["test"]["eligible_users"], 0)
             self.assertIn("hybrid", report["test"]["models"])
             self.assertIn("hr@5_95pct_user_bootstrap", report["test"]["models"]["hybrid"])
+            self.assertIn("hybrid", report["drift"]["models"])
+            self.assertNotIn("_internal", report["test"])
+            self.assertIn("top1_score_ks_d", report["drift"]["models"]["content"])
+
+
+    def test_drift_estimators_identical_and_shifted(self):
+        self.assertEqual(ks_distance([.1,.2,.3],[.1,.2,.3]),0)
+        self.assertAlmostEqual(distribution_psi([.1,.2,.3,.4,.5],[.1,.2,.3,.4,.5]),0)
+        self.assertGreater(ks_distance([.1,.2,.3],[.7,.8,.9]),0)
+        self.assertGreater(distribution_psi([1,2,3,4,5,6,7,8,9,10],[10]*10),0)
+
+    def test_bootstrap_difference_deterministic(self):
+        a=bootstrap_difference([0,0,1,1],[1,1,1,0])
+        b=bootstrap_difference([0,0,1,1],[1,1,1,0])
+        self.assertEqual(a,b)
+        self.assertEqual(len(a),2)
 
 
 if __name__ == "__main__":

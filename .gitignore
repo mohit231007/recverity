@@ -9,3 +9,9 @@ __pycache__/
 .env
 .env.*
 .DS_Store
+
+# Third-party movie ratings are not redistributable without permission
+/ml-100k/
+/research-results/
+**/u.data
+**/u.item

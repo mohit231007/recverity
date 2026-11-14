@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Real MovieLens recommendation evaluation with chronological splits, user-bootstrap intervals, cold-start diagnostics, and cohort drift evidence."/>
+<meta name="theme-color" content="#142636"/><title>Real-Data Benchmark · RecVerity</title>
+<link rel="stylesheet" href="./styles.css"/><link rel="stylesheet" href="./benchmark.css"/></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="layout">
+<aside class="sidebar"><a href="./index.html#overview" class="brand"><span class="brandicon">R.</span><span>RECVERITY<small>RECOMMENDATION ENGINEERING</small></span></a>
+<div class="side-label">RESEARCH WORKBENCH</div><nav aria-label="Main navigation">
+<a href="./index.html#overview">⌂ &nbsp; Overview</a><a href="./index.html#lab">◈ &nbsp; Recommendation lab</a>
+<a href="./index.html#cold">✧ &nbsp; Cold-start discovery</a><a href="./index.html#audit">▤ &nbsp; Evaluation audit</a>
+<a href="./trust-lab.html#csv">◎ &nbsp; Research assurance</a>
+<a class="active" href="./benchmark.html">▥ &nbsp; Real-data benchmark</a>
+<a href="./index.html#engineering">⌘ &nbsp; Engineering</a></nav>
+<div class="sidebar-footer"><div class="tag">Independent open source</div><p>Mohit Bhatnagar</p><small>Reproducible research · No paid APIs</small></div></aside>
+<div class="workspace"><header class="top"><button id="menu" class="mobile-menu" type="button" aria-expanded="false" aria-controls="mobile-links">☰ Menu</button>
+<div>RESEARCH STUDIO <span class="sep">/</span> REAL RATINGS & DRIFT</div><div class="top-right"><span class="live-dot"></span> VERIFIED OFFLINE BENCHMARK</div></header>
+<nav class="mobile-links" id="mobile-links" hidden aria-label="Mobile navigation"><a href="./index.html#overview">Overview</a>
+<a href="./index.html#lab">Recommendation lab</a><a href="./trust-lab.html#csv">Local CSV workbench</a>
+<a href="#ranking">Model comparison</a><a href="#drift">Drift diagnostics</a><a href="#methods">Protocol</a></nav>
+<main id="main" tabindex="-1"><section class="page">
+<p class="eyebrow">REAL EVENT-LEVEL EVIDENCE / REPRODUCIBLE OFFLINE ANALYSIS</p>
+<h1>When the hybrid <em>doesn't win.</em></h1>
+<p class="lead">A recommendation experiment where a simpler baseline beats the untuned hybrid on the reported held-out ranking metrics. The engineering insight matters more than a flattering headline.</p>
+<div class="hero-actions"><a href="#ranking" class="btn">Explore model comparison</a><a href="#drift" class="btn muted">Inspect measured drift</a>
+<a href="https://github.com/mohit231007/recverity/blob/main/docs/REAL_BENCHMARK_REPORT.md" class="btn muted">Read research report</a></div>
+<div class="note"><strong>Separate domain:</strong> the figures below come from genuine individual ratings in <a href="https://grouplens.org/datasets/movielens/100k/" target="_blank" rel="noopener noreferrer">GroupLens MovieLens 100K</a>, not the educational Amazon snapshot. This is offline future positive-rating recovery—not clicks, purchases, conversion, or revenue. We do not redistribute the source dataset.</div>
+<div id="benchmark-error" class="disclosure" hidden role="alert">The benchmark evidence could not be loaded.</div>
+<div id="benchmark-body" hidden>
+<div id="benchmark-stats" class="stats"></div>
+<section id="ranking" class="benchmark-section"><p class="eyebrow">01 / FOUR BASELINES · FROZEN TRAIN MODEL</p>
+<h2>Held-out model comparison</h2><p class="muted-text">Hit Rate@5 measures the share of eligible users with at least one held-out positively rated item in the top five. NDCG@5 measures ranking position. Both are observational offline metrics.</p>
+<div id="benchmark-models" class="benchmark-models"></div>
+<div class="panel"><p><strong>Interpretation:</strong> The 60/40 hybrid is an untuned blend. Methods share the popularity fallback for users without positive training history; overall results do not isolate personalization.</p></div></section>
+<section id="cold" class="benchmark-section"><p class="eyebrow">02 / COLD-START BIAS</p><h2>Who was actually evaluated?</h2><div class="panel" id="benchmark-cold"></div></section>
+<section id="drift" class="benchmark-section"><p class="eyebrow">03 / MODEL OBSERVABILITY</p><h2>Prediction and performance drift</h2>
+<p>Compare later validation and test cohorts using exactly the same frozen model trained on the earlier period. Cohort composition can differ; the changes do not establish within-user deterioration.</p>
+<div class="benchmark-drift-grid" id="benchmark-drift"></div>
+<p class="muted-text">Top-one score PSI and KS D describe cohort-level score shift, not concept drift or p-values. HR@5 differences use 300 bootstrap resamples of users in each cohort. A confidence interval containing zero is inconclusive.</p></section>
+<section id="methods" class="benchmark-section"><p class="eyebrow">04 / EVIDENCE & REPRODUCIBILITY</p><h2>Protocol and provenance</h2>
+<div class="benchmark-grid"><div class="panel"><h3>Integrity of the evaluation</h3><p>Global timestamp boundaries, no repeated user–item pair across partitions, train-only ranking features, and a catalog restricted to previously observed training items.</p>
+<p class="muted-text">A user's positive rating is not proof they clicked an impression or purchased an item.</p></div>
+<div class="panel"><h3>Data provenance</h3><p>The official GroupLens archive was checksum-verified on an ephemeral GitHub Actions runner. Neither source files nor individual events are redistributed.</p>
+<p id="benchmark-checksum" class="benchmark-hash"></p><a href="./data/movielens-100k-v1.json" download>Download aggregate-only JSON</a></div></div>
+<div class="panel"><h3>Reproduce the benchmark locally</h3><p>Download the archive directly from GroupLens, read its usage terms and extract <code>u.data</code> and <code>u.item</code>.</p>
+<pre><code>python research/benchmark.py --ratings ./ml-100k/u.data --items ./ml-100k/u.item --max-users 300 --seed 2307 --output ./aggregate.json</code></pre>
+<p><a href="https://github.com/mohit231007/recverity/actions/workflows/real-benchmark.yml">Verified workflow</a> · <a href="https://github.com/mohit231007/recverity/blob/main/research/benchmark.py">Model source</a> · <a href="https://doi.org/10.1145/2827872">MovieLens research citation</a></p></div></section>
+</div>
+<footer>RecVerity · Independent research by Mohit Bhatnagar · Not affiliated with Amazon or endorsed by GroupLens · <a href="https://github.com/mohit231007/recverity">GitHub</a></footer>
+</section></main></div></div><script type="module" src="./benchmark.mjs"></script></body></html>

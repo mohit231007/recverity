@@ -17,7 +17,7 @@ GroupLens MovieLens research dataset and licensing: https://grouplens.org/datase
 5. Evaluate on catalog-known future positive items: warm and history-free / sparse users separately. Exclude already-seen items, report cold-item exclusions, denominator, and sample cap.
 6. Report HR@5/10, Recall@5/10, NDCG@5/10, catalog coverage, runtime, and user-cluster bootstrap intervals. Dataset limitations and test selection must accompany every public metric.
 
-Unlike web demo synthetic controls, every figure from this runner is derived from the genuine downloaded ratings. No MovieLens outcomes have been claimed as measured until the user runs the benchmark and publishes its versioned report.
+Unlike web demo synthetic controls, every figure from this runner is derived from the genuine downloaded ratings. The authentic MovieLens run completed successfully on the official GroupLens archive in GitHub Actions. See the versioned aggregate-only JSON and [full report](REAL_BENCHMARK_REPORT.md). Do not compare this movie-domain benchmark directly against the private Amazon educational result.
 
 ## Leakage-aware splits
 
@@ -25,10 +25,14 @@ Using per-user last-event holdout alone permits users' **future** events to infl
 
 ## Reproducibility
 
-The benchmark runner will be available at `research/benchmark.py` (stdlib Python). Run as:
+The benchmark runner is implemented at `research/benchmark.py` (stdlib Python), and the official-data evaluation workflow is `.github/workflows/real-benchmark.yml`. Run as:
 
 ```bash
-python research/benchmark.py --ratings ./ml-100k/u.data --items ./ml-100k/u.item --max-users 200 --output ./research-result.json
+python research/benchmark.py --ratings ./ml-100k/u.data --items ./ml-100k/u.item --max-users 300 --seed 2307 --output ./research-result.json
 ```
 
 Uploaded datasets and generated individual-level outputs must remain local. Only share aggregated, vetted metrics and protocol metadata.
+
+## Verified drift protocol
+
+The same frozen training model scores two held-out chronological cohorts, and reports top-1 ranking-score KS D and reference-quantile PSI, along with HR@5 differences and **300 independent-user bootstrap replicates**. These comparisons measure changes in the user cohort's score and ranking distributions; they do not constitute evidence of concept drift, causal uplift, or online performance degradation. Content top-one scores saturate at 1.0 with coarse genre-only metadata. See [the reproducible report](REAL_BENCHMARK_REPORT.md).

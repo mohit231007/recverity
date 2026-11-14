@@ -4,7 +4,8 @@
 
 RecVerity is an independent, open-source recommendation engineering lab by **Mohit Bhatnagar**. It demonstrates how content, collaborative, and hybrid ranking systems behave—and why a misleading train/test split can completely change an apparently impressive result.
 
-**Interactive website:** https://mohit231007.github.io/recverity/ (GitHub Pages)
+**Interactive website:** https://mohit231007.github.io/recverity/ (GitHub Pages)  
+**Real-ratings research:** https://mohit231007.github.io/recverity/benchmark.html
 
 ## What you can explore
 
@@ -16,6 +17,7 @@ RecVerity is an independent, open-source recommendation engineering lab by **Moh
 - Five metadata-nearest recommendations for fictional products without reviews.
 - Export current synthetic ranked results as JSON.
 - A separate evaluation audit exposing dramatic review-event leakage.
+- A **real 100,000-rating MovieLens 100K benchmark** with four ranking methods, timestamped holdouts, group-aware uncertainty, item coverage, cold-start diagnostics and a frozen-model cohort-drift comparison.
 - A **Research Assurance** page with event/pair/chronological leakage fixtures, price/category/inventory drift diagnostics, browser-local CSV upload auditing, and an on-device multi-turn semantic research assistant.
 - Two uploaded catalog files can be compared as reference/current distributions, while two event files can be audited as train/test. You can also generate top-5 recommendations **directly from uploaded catalog and training interactions CSVs**, using content similarity, co-interaction signals, hybrid scoring or popularity fallback. Uploaded data are never sent to a backend.
 
@@ -26,6 +28,18 @@ The **educational Amazon snapshot** is private and is **not** published in this 
 A naive held-out evaluation reported **81.67% hybrid Hit Rate@5** but review-event overlap contaminated 749 of 911 test users. A stricter leave-one-review-event-out test on 201 eligible users returned **3.48% Hit Rate@5 for both content and hybrid** (0% for collaborative and popularity). This is a small, retrospective reconstruction benchmark, *not* an estimate of customer conversion, purchasing, CTR or revenue lift.
 
 The **public, live browser demo** is completely separate: 72 fictional products and 400 invented shopper histories generated deterministically. It cannot establish Amazon recommendation accuracy. Product-level aggregate ratings are never fabricated into per-user ratings.
+
+## Verified real-data experiment (separate movie domain)
+
+The authentic user-level MovieLens 100K experiment ran on [official GroupLens data via GitHub Actions](https://github.com/mohit231007/recverity/actions/runs/43640849373). Its **147 eligible test users** produced the following held-out Hit Rate@5:
+
+| Popularity | Content | Hybrid (60% CF + 40% content) | Collaborative |
+|---:|---:|---:|---:|
+| **46.26%** | **46.26%** | 44.22% | 42.18% |
+
+This is an honest negative result: the untuned hybrid **did not improve HR@5 over popularity**. The hybrid reached 14.17% catalog coverage@10 versus 4.27% for popularity, demonstrating a coverage/relevance trade-off.
+
+**Cold-start caveat:** 96 of the 147 eligible test users had zero positive training history and used the same popularity fallback across models. Movie ratings are not Amazon purchases or advertising impressions. The train/validation/test split contained 80,003 / 9,997 / 10,000 events. For measured cohort score/performance drift, 95% intervals, exact reproducibility and GroupLens terms, see the [full research report](docs/REAL_BENCHMARK_REPORT.md) and [interactive evidence page](https://mohit231007.github.io/recverity/benchmark.html). Raw GroupLens records are **not** redistributed.
 
 ## Quick start
 
@@ -62,12 +76,16 @@ Open [Research Assurance](https://mohit231007.github.io/recverity/trust-lab.html
 
 ## Authentic ratings benchmark
 
-A standalone `research/benchmark.py` runner accepts the officially downloaded **MovieLens 100K** `u.data` and `u.item` files to produce aggregate, reproducible chronological benchmark reports. This movie-domain benchmark is separate from the e-commerce Scaler research and no MovieLens outcomes are presented as verified yet. Tests use fictional fixtures only. **The dataset is not redistributed.** See [benchmark protocol](docs/BENCHMARK_PROTOCOL.md) and [GroupLens license](https://grouplens.org/datasets/movielens/100k/).
+A standalone `research/benchmark.py` runner has been verified on officially downloaded **MovieLens 100K** `u.data` and `u.item` files to produce aggregate, reproducible chronological benchmark reports. This movie-domain benchmark is separate from the e-commerce Scaler research and the measured MovieLens outcomes are published as aggregate-only JSON with source checksums. Local unit tests still use fictional fixtures. **The dataset is not redistributed.** See [benchmark protocol](docs/BENCHMARK_PROTOCOL.md) and [GroupLens license](https://grouplens.org/datasets/movielens/100k/).
 
 Run:
 ```bash
 python research/benchmark.py --ratings ./ml-100k/u.data --items ./ml-100k/u.item --max-users 200 --output ./recverity-benchmark.json
 ```
+
+## Measured vs simulated drift
+
+The Research Assurance page provides **synthetic** price/category/inventory scenarios and browser-private CSV comparisons. Separately, the **real ratings benchmark** measures frozen-model prediction-score distribution differences (PSI and KS D) and validation-to-test Hit Rate@5 differences with independent-user bootstrap uncertainty. Neither is evidence of causal online performance or concept drift.
 
 ## Scientific upgrade roadmap
 

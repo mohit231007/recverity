@@ -22,6 +22,7 @@ jobs:
           node --check web/csv-lab.mjs
           node --check web/trust-lab.mjs
           node --check web/upload-recommender.mjs
+          node --check web/benchmark.mjs
       - name: Run recommendation invariants
         run: node --test tests/*.test.mjs
       - name: Verify website files
@@ -32,7 +33,14 @@ jobs:
           test -f web/engine.mjs
           test -f web/trust-lab.html
           test -f web/trust-lab.css
+          test -f web/benchmark.html
+          test -f web/benchmark.css
+          test -f web/benchmark.mjs
+          test -f web/data/movielens-100k-v1.json
       - name: Guard against publishing raw dataset
         run: |
           test ! -f data/private/amazon.csv
+          test ! -f ml-100k/u.data
+          test ! -f ml-100k/u.item
+          ! find . -type f \( -name "u.data" -o -name "u.item" -o -name "ml-100k.zip" \) | grep .
           ! find web -type f \( -iname '*.csv' -o -iname '*.parquet' -o -iname '*.ipynb' \) | grep .
