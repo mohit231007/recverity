@@ -1,0 +1,24 @@
+name: Research Benchmark QA
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  research-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile research code
+        run: python -m py_compile research/benchmark.py
+      - name: Run network-free benchmark regression tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Block third-party research data from repository
+        run: |
+          test ! -e research/u.data
+          test ! -e research/u.item
+          ! find research -type f \( -iname '*.zip' -o -iname '*.parquet' -o -iname '*.csv' -o -iname 'u.data' \) | grep .

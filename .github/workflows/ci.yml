@@ -17,6 +17,11 @@ jobs:
         run: |
           node --check web/engine.mjs
           node --check web/app.mjs
+          node --check web/quality.mjs
+          node --check web/semantic.mjs
+          node --check web/csv-lab.mjs
+          node --check web/trust-lab.mjs
+          node --check web/upload-recommender.mjs
       - name: Run recommendation invariants
         run: node --test tests/*.test.mjs
       - name: Verify website files
@@ -25,6 +30,8 @@ jobs:
           test -f web/styles.css
           test -f web/app.mjs
           test -f web/engine.mjs
+          test -f web/trust-lab.html
+          test -f web/trust-lab.css
       - name: Guard against publishing raw dataset
         run: |
           test ! -f data/private/amazon.csv

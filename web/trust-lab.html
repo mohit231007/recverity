@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research Assurance · RecVerity</title><meta name="description" content="Free local CSV evaluation, data leakage checks, drift diagnostics and a semantic research assistant."/>
+<meta name="theme-color" content="#142636"/><link rel="stylesheet" href="./styles.css"/><link rel="stylesheet" href="./trust-lab.css"/></head>
+<body><a href="#main" class="skip">Skip to content</a><div class="layout">
+<aside class="sidebar"><a href="./index.html#overview" class="brand"><span class="brandicon">R.</span><span>RECVERITY<small>RECOMMENDATION ENGINEERING</small></span></a>
+<div class="side-label">RESEARCH WORKBENCH</div><nav aria-label="Main navigation">
+<a href="./index.html#overview">⌂ &nbsp; Overview</a><a href="./index.html#lab">◈ &nbsp; Recommendation lab</a>
+<a href="./index.html#cold">✧ &nbsp; Cold-start discovery</a><a href="./index.html#audit">▤ &nbsp; Evaluation audit</a>
+<a class="active" href="./trust-lab.html#drift">◎ &nbsp; Research assurance</a>
+<a href="./index.html#engineering">⌘ &nbsp; Engineering</a></nav>
+<div class="sidebar-footer"><div class="tag">Independent open source</div><p>Mohit Bhatnagar</p><small>Browser-only · No API · No tracking</small></div></aside>
+<div class="workspace"><header class="top"><button id="menu" class="mobile-menu" type="button" aria-expanded="false" aria-controls="mobile-links">☰ Menu</button>
+<div>RESEARCH STUDIO <span class="sep">/</span> ASSURANCE & SEMANTIC SEARCH</div><div class="top-right"><span class="live-dot"></span> ON-DEVICE PROCESSING</div></header>
+<nav class="mobile-links" id="mobile-links" hidden aria-label="Mobile navigation">
+<a href="./index.html#lab">Recommendations</a><a href="./index.html#audit">Evaluation audit</a><a href="#drift">Drift checks</a><a href="#leakage">Leakage checks</a><a href="#csv">Upload CSV</a><a href="#sandbox">Your recommendations</a><a href="#assistant">Local assistant</a></nav>
+<main id="main" tabindex="-1"><section class="page">
+<p class="eyebrow">RESEARCH QUALITY / MODEL RISK</p>
+<h1>Trust the evidence, <em>not the score.</em></h1>
+<p class="lead">Reproduce synthetic quality failures, audit event leakage, compare your own local CSV files, and search project research notes without an external AI service.</p>
+<div class="hero-actions"><a class="btn" href="#csv">Try your own CSV</a><a class="btn muted" href="#drift">Explore drift</a><a class="btn muted" href="#assistant">Ask the local assistant</a></div>
+<div class="note"><strong>Evidence boundary:</strong> built-in scenarios use fictional records. All uploaded CSV files are parsed in your browser and are never uploaded, logged, persisted, or sent to GitHub. Do not enter sensitive data on an untrusted device.</div>
+
+<section id="drift" class="assurance-section" aria-labelledby="drift-title">
+<p class="eyebrow">01 / DATA MONITORING</p><h2 id="drift-title">Synthetic reference vs current</h2>
+<p>Change a fictional catalog and observe independent quality signals. A drift alert is a reason to investigate, not proof of model failure or a command to retrain.</p>
+<div class="panel"><div class="qa-form">
+<label for="scenario">Current data scenario<select id="scenario"><option value="stable">Stable baseline</option><option value="price-shock">Price shock</option><option value="catalog-shift">Category shift</option><option value="inventory-incident">Availability incident</option><option value="schema-incident">Price missingness incident</option></select></label>
+<label for="threshold">Distribution threshold: <output id="threshold-value">0.20</output><input id="threshold" type="range" min=".05" max=".6" step=".05" value=".2"/></label></div>
+<div id="drift-summary" class="qa-summary" role="status" aria-live="polite"></div>
+<div id="drift-checks" class="qa-checks"></div><p class="muted-text" id="drift-detail"></p></div></section>
+
+<section id="leakage" class="assurance-section" aria-labelledby="leak-title">
+<p class="eyebrow">02 / EVALUATION INTEGRITY</p><h2 id="leak-title">Leakage test bench</h2>
+<p>Compare an event-level holdout against deliberately broken partitions. Shared review IDs, duplicate user–item pairs and future-to-past temporal contamination are separate failures.</p>
+<div class="panel"><label for="leak-scenario">Fixture<select id="leak-scenario"><option value="clean">Clean event holdout</option><option value="review-reuse">Duplicate review ID across items</option><option value="pair-overlap">Repeated user-item pair</option><option value="time-inversion">Future timestamp in train</option></select></label>
+<div id="leak-results" class="qa-checks" role="status" aria-live="polite"></div></div></section>
+
+<section id="csv" class="assurance-section" aria-labelledby="csv-title"><p class="eyebrow">03 / YOUR DATA / PRIVACY FIRST</p>
+<h2 id="csv-title">Bring your own CSV — no SQL required</h2><p>Use two catalog CSVs for meaningful reference-to-current drift or two interaction CSVs for train-to-test leakage. Single files receive schema, null and anomaly checks. Maximum 5 MB and 10,000 data rows per file.</p>
+<div class="qa-grid"><div class="panel">
+<h3>Catalog quality & drift</h3><p><code>product_id, product_name, category, price, rating, available</code></p>
+<label for="catalog-ref">Reference catalog CSV<input type="file" id="catalog-ref" accept=".csv,text/csv"/></label>
+<label for="catalog-cur">Current catalog CSV<input type="file" id="catalog-cur" accept=".csv,text/csv"/></label>
+<div class="qa-actions"><button class="btn small" id="catalog-run" type="button">Check catalog</button><button class="btn secondary small" id="catalog-example" type="button">Try example</button></div>
+<div id="catalog-report" class="qa-result" role="status" aria-live="polite">Choose a reference CSV to start.</div>
+</div><div class="panel">
+<h3>Interaction leakage audit</h3><p><code>user_id, product_id, rating, timestamp, event_id</code></p>
+<label for="events-train">Training interactions CSV<input type="file" id="events-train" accept=".csv,text/csv"/></label>
+<label for="events-test">Testing interactions CSV<input type="file" id="events-test" accept=".csv,text/csv"/></label>
+<div class="qa-actions"><button class="btn small" id="events-run" type="button">Audit event split</button><button class="btn secondary small" id="events-example" type="button">Try leakage fixture</button></div>
+<div id="events-report" class="qa-result" role="status" aria-live="polite">Provide train and test CSVs to audit splits.</div>
+</div></div>
+<p class="muted-text">These files stay in your browser's memory during the page session. Reload to clear them. The CSV workbench audits inputs; it does not train a production model, prove causal uplift, or create a database. If you need scalable recurring ingestion, versioned joins or live inference, a managed data pipeline becomes a separate project.</p>
+</section>
+
+<section id="sandbox" class="assurance-section" aria-labelledby="sandbox-title">
+<p class="eyebrow">04 / YOUR CATALOG / IN-BROWSER RECOMMENDATIONS</p><h2 id="sandbox-title">Run the recommender on your CSV</h2>
+<p>The catalog from <strong>Reference catalog CSV</strong> and the interactions from <strong>Training interactions CSV</strong> are used for local recommendations. The test interactions file is never used for ranking. User ratings of 4–5 count as positive; missing event ratings are treated as implicit interaction signals. Negative and previously viewed items are excluded. No SQL or full N×N matrix is required.</p>
+<div class="panel">
+<div class="qa-form">
+<label for="own-user">User ID (optional; first user used if blank)<input type="text" id="own-user" placeholder="e.g. u1" maxlength="120"/></label>
+<label for="own-anchor">Or anchor product ID for metadata similarity<input type="text" id="own-anchor" placeholder="e.g. p1" maxlength="120"/></label>
+<label for="own-method">Ranking method<select id="own-method"><option value="hybrid">Hybrid (60% CF / 40% content)</option><option value="content">Content similarity</option><option value="collaborative">Item co-interactions</option><option value="popularity">Interaction popularity</option></select></label>
+<label for="own-budget">Max price (blank = no limit)<input type="number" id="own-budget" min="1" step="1" placeholder="No limit"/></label></div>
+<div class="qa-actions"><button id="own-run" type="button" class="btn small">Generate top-5 from CSV</button><button id="own-example" type="button" class="btn secondary small">Run synthetic example</button></div>
+<div class="qa-result" id="own-context" role="status" aria-live="polite">Choose a local catalog in the first CSV panel and optional training interactions in the second.</div>
+<div id="own-results" class="qa-recommendations"></div></div>
+<p class="muted-text">This is a bounded explanatory sandbox: up to 10,000 catalog products and 10,000 interactions, with limited history depth and neighbor exploration. Scores are uncalibrated similarities, not probabilities. Recommendation accuracy cannot be estimated without an independent held-out labeled test set.</p>
+</section>
+
+<section id="assistant" class="assurance-section" aria-labelledby="ask-title"><p class="eyebrow">05 / LOCAL SEMANTIC RESEARCH</p>
+<h2 id="ask-title">Ask RecVerity</h2><p>An on-device low-rank semantic retriever finds relevant project notes and keeps this conversation visible until you clear or reload the page. Replies return authored explanations with citations. No paid model, network inference, or invented answers.</p>
+<div class="panel qa-chat"><form id="ask-form"><label for="question">Ask a question about the project<input type="text" id="question" maxlength="350" autocomplete="off" placeholder="Why did a high hit rate collapse after removing leakage?"/></label>
+<div class="qa-actions"><button type="submit" class="btn small">Find grounded answer</button><button type="button" class="btn secondary small" id="ask-sample">Ask about drift</button><button type="button" class="btn secondary small" id="ask-clear">Clear chat</button></div></form>
+<div id="answer" class="qa-answer" role="log" aria-live="polite"><p data-placeholder>Suggested topics: data leakage, drift monitoring, cold start, ranking evaluation, privacy, and authentic ratings.</p></div></div>
+</section>
+<footer>RecVerity · Independent research by Mohit Bhatnagar · <a href="./index.html#overview">Back to overview</a> · <a href="https://github.com/mohit231007/recverity">GitHub source</a></footer>
+</section></main></div></div><script type="module" src="./trust-lab.mjs"></script></body></html>
