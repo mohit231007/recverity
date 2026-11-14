@@ -38,3 +38,20 @@ test("chronology check is unknown without timestamps",()=>{
  const result=auditEventSplit([{eventId:"1",userId:"u",itemId:"i"}],[{eventId:"2",userId:"v",itemId:"j"}]);
  assert.equal(result.chronologicalKnown,false);
 });
+
+test("partial event IDs and timestamps do not produce false-green audits",()=>{
+ const train=[{eventId:"e1",userId:"u1",itemId:"p1",timestamp:1},
+              {eventId:null,userId:"u2",itemId:"p2",timestamp:null}];
+ const test=[{eventId:"e2",userId:"u3",itemId:"p3",timestamp:2}];
+ const r=auditEventSplit(train,test);
+ assert.equal(r.eventIdsComplete,false);
+ assert.equal(r.chronologicalKnown,false);
+});
+test("repeated event IDs within a training snapshot are flagged",()=>{
+ const train=[{eventId:"repeat",userId:"u1",itemId:"p1",timestamp:1},
+              {eventId:"repeat",userId:"u2",itemId:"p2",timestamp:2}];
+ const test=[{eventId:"new",userId:"u3",itemId:"p3",timestamp:3}];
+ const r=auditEventSplit(train,test);
+ assert.equal(r.withinTrainEventReuse,1);
+ assert.equal(r.leakage,true);
+});

@@ -79,15 +79,21 @@ export function monitorCatalog(reference,current,threshold=.2){
   caveat:"Synthetic scenario comparison only; thresholds are configurable heuristics, not calibrated significance tests."};
 }
 export function auditEventSplit(train,test){
- const ids=new Set(train.map(x=>x.eventId).filter(Boolean)),pairs=new Set(train.map(x=>x.userId+"|"+x.itemId));
- const duplicates=test.filter(x=>x.eventId&&ids.has(x.eventId)),samePairs=test.filter(x=>pairs.has(x.userId+"|"+x.itemId));
- const laterTrain=train.filter(x=>Number.isFinite(x.timestamp)),earlyTest=test.filter(x=>Number.isFinite(x.timestamp));
- const maxTrain=laterTrain.length?Math.max(...laterTrain.map(x=>x.timestamp)):null;
- const minTest=earlyTest.length?Math.min(...earlyTest.map(x=>x.timestamp)):null;
- return {trainEvents:train.length,testEvents:test.length,eventOverlap:duplicates.length,userItemOverlap:samePairs.length,
-  temporalInversion:maxTrain!==null&&minTest!==null&&maxTrain>=minTest,
-  chronologicalKnown:maxTrain!==null&&minTest!==null,leakage:duplicates.length>0||samePairs.length>0||
-  (maxTrain!==null&&minTest!==null&&maxTrain>=minTest)};
+ const eventIdsComplete=Boolean(train.length&&test.length)&&[...train,...test].every(x=>typeof x.eventId==="string"&&x.eventId.trim().length>0);
+ const chronologicalKnown=Boolean(train.length&&test.length)&&[...train,...test].every(x=>Number.isFinite(x.timestamp));
+ const pair=x=>JSON.stringify([x.userId,x.itemId]);
+ const ids=new Set(train.map(x=>x.eventId).filter(Boolean)),pairs=new Set(train.map(pair));
+ const duplicates=test.filter(x=>x.eventId&&ids.has(x.eventId));
+ const samePairs=test.filter(x=>pairs.has(pair(x)));
+ const reused=rows=>{const known=rows.map(x=>x.eventId).filter(Boolean);return known.length-new Set(known).size;};
+ const withinTrain=reused(train),withinTest=reused(test);
+ const maxTrain=chronologicalKnown?Math.max(...train.map(x=>x.timestamp)):null;
+ const minTest=chronologicalKnown?Math.min(...test.map(x=>x.timestamp)):null;
+ const temporalInversion=chronologicalKnown&&maxTrain>=minTest;
+ return {trainEvents:train.length,testEvents:test.length,eventOverlap:duplicates.length,
+  userItemOverlap:samePairs.length,withinTrainEventReuse:withinTrain,withinTestEventReuse:withinTest,
+  eventIdsComplete,chronologicalKnown,temporalInversion,
+  leakage:duplicates.length>0||samePairs.length>0||withinTrain>0||withinTest>0||temporalInversion};
 }
 export function demoEventSplit(mode="clean"){
  const train=[{eventId:"evt-1",userId:"u-1",itemId:"a",timestamp:10},{eventId:"evt-2",userId:"u-2",itemId:"b",timestamp:12},

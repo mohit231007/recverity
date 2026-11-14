@@ -88,11 +88,12 @@ async function eventsReport(example=false){
    const a=auditEventSplit(t.events,s.events);
    const sameEventSchema=trainParsed.headers.some(x=>["event_id","review_id"].includes(x))&&testParsed.headers.some(x=>["event_id","review_id"].includes(x));
    const sameTimeSchema=trainParsed.headers.some(x=>["timestamp","event_time","created_at"].includes(x))&&testParsed.headers.some(x=>["timestamp","event_time","created_at"].includes(x));
-   appendLine(target,"AUDIT · Shared event IDs: "+(sameEventSchema?a.eventOverlap:"not measurable")+
+   appendLine(target,"AUDIT · Shared event IDs: "+(sameEventSchema&&a.eventIdsComplete?a.eventOverlap:"incomplete IDs / not measurable")+
+    " · Within-file review-ID reuse: "+(a.withinTrainEventReuse+a.withinTestEventReuse)+
     " · Shared user–item pairs: "+a.userItemOverlap+
     " · Global temporal inversion: "+(sameTimeSchema&&a.chronologicalKnown?(a.temporalInversion?"YES":"NO"):"not measurable")+".");
    appendLine(target,(a.leakage?"Leakage risk detected.":"No detected overlap in available keys.")+
-   " An absent review ID does not prove event-level independence. Checks use identifiers within the provided files only.");
+   " Missing review IDs or timestamps make corresponding checks inconclusive. Checks use identifiers within the provided files only.");
   }else appendLine(target,"Upload a test interactions CSV to inspect train/test leakage.");
  }catch(err){target.classList.add("error");appendLine(target,err.message);}
 }
