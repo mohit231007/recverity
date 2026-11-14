@@ -38,6 +38,7 @@ try{
  assert.match(await page.locator("#drift-summary").innerText(),/alert/i);
  await page.locator("#leak-scenario").selectOption("review-reuse");
  assert.match(await page.locator("#leak-results").innerText(),/review event overlap/i);
+ await page.locator("#ask-sample").click();
  await page.locator("#question").fill("Why 81.67 became 3.48?");
  await page.locator("#ask-form button[type=submit]").click();
  assert.ok(await page.locator("#answer .chat-user").count()>=2);
