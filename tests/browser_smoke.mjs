@@ -31,6 +31,20 @@ try{
  assert.match(await page.locator("#engineering").innerText(),/TF-IDF/);
  assert.deepEqual(errors,[]);
 
+ await page.goto("http://127.0.0.1:8000/trust-lab.html",{waitUntil:"networkidle"});
+ await page.locator("#drift-checks .qa-check").first().waitFor();
+ assert.equal(await page.locator("#drift-checks .qa-check").count(),4);
+ await page.locator("#scenario").selectOption("price-shock");
+ assert.match(await page.locator("#drift-summary").innerText(),/alert/i);
+ await page.locator("#leak-scenario").selectOption("review-reuse");
+ assert.match(await page.locator("#leak-results").innerText(),/review event overlap/i);
+ await page.locator("#events-example").click();
+ assert.match(await page.locator("#events-report").innerText(),/Shared event IDs: 1/);
+ await page.locator("#catalog-example").click();
+ assert.match(await page.locator("#catalog-report").innerText(),/REFERENCE/);
+ await page.locator("#ask-sample").click();
+ assert.match(await page.locator("#answer").innerText(),/source/i);
+ await page.screenshot({path:"artifacts/desktop-research-assurance.png",fullPage:true});
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
  mobile.on("pageerror",e=>errors.push(e.message));
  await mobile.goto("http://127.0.0.1:8000/",{waitUntil:"networkidle"});
@@ -41,6 +55,11 @@ try{
  await mobile.locator("#results .product").first().waitFor();
  assert.equal(await mobile.locator("#results .product").count(),5);
  await mobile.screenshot({path:"artifacts/mobile-lab.png",fullPage:true});
+ await mobile.goto("http://127.0.0.1:8000/trust-lab.html",{waitUntil:"networkidle"});
+ await mobile.locator("#menu").click();
+ await mobile.locator("#mobile-links a[href='#csv']").click();
+ await mobile.locator("#catalog-run").waitFor();
+ await mobile.screenshot({path:"artifacts/mobile-research-assurance.png",fullPage:true});
  assert.deepEqual(errors,[]);
  console.log("PASS desktop/mobile navigation, ranking, guest fallback, cold start, audit and browser errors");
 }finally{await browser.close();}
