@@ -1,0 +1,11 @@
+# Private research data never belongs in public Git
+data/private/
+**/amazon.csv
+outputs/
+figures/
+.venv/
+node_modules/
+__pycache__/
+.env
+.env.*
+.DS_Store
