@@ -60,6 +60,7 @@ try{
  await page.locator("#events-train").setInputFiles({name:"train.csv",mimeType:"text/csv",buffer:Buffer.from(ownTraining)});
  await page.locator("#events-test").setInputFiles({name:"test.csv",mimeType:"text/csv",buffer:Buffer.from(ownTesting)});
  await page.locator("#events-run").click();
+ await page.waitForFunction(()=>document.querySelector("#events-report")?.textContent?.includes("Shared event IDs: 1"));
  assert.match(await page.locator("#events-report").innerText(),/Shared event IDs: 1/);
  await page.locator("#own-user").fill("u1");
  await page.locator("#own-run").click();
@@ -68,6 +69,7 @@ try{
  assert.equal(await page.locator("#own-results img").count(),0,"CSV output must render as text, never markup");
  await page.locator("#catalog-cur").setInputFiles({name:"current.csv",mimeType:"text/csv",buffer:Buffer.from(ownCatalog.replace("Computing","Audio"))});
  await page.locator("#catalog-run").click();
+ await page.waitForFunction(()=>document.querySelector("#catalog-report")?.textContent?.includes("DRIFT"));
  assert.match(await page.locator("#catalog-report").innerText(),/DRIFT/);
   await page.screenshot({path:"artifacts/desktop-research-assurance.png",fullPage:true});
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
