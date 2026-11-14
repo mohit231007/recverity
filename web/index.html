@@ -11,19 +11,23 @@
 <a href="#cold" data-tab="cold">✧ &nbsp; Cold-start discovery</a>
 <a href="#audit" data-tab="audit">▤ &nbsp; Evaluation audit</a>
 <a href="./trust-lab.html#drift">◎ &nbsp; Research assurance</a>
+<a href="./benchmark.html">▥ &nbsp; Real-data benchmark</a>
 <a href="#engineering" data-tab="engineering">⌘ &nbsp; Engineering</a></nav>
 <div class="sidebar-footer"><div class="tag">Independent open source</div><p>Designed by Mohit Bhatnagar</p><small>No ads · No account · No tracking</small></div>
 </aside>
 <div class="workspace"><header class="top"><button id="menu" class="mobile-menu" type="button" aria-expanded="false" aria-controls="mobile-links">☰ Menu</button><div>RESEARCH STUDIO <span class="sep">/</span> <span id="breadcrumb">OVERVIEW</span></div><div class="top-right"><span class="live-dot"></span> BROWSER-ONLY DEMO</div></header>
 <nav id="mobile-links" class="mobile-links" hidden aria-label="Mobile navigation">
-<a href="#overview">Overview</a><a href="#lab">Recommendation lab</a><a href="#cold">Cold-start discovery</a><a href="#audit">Evaluation audit</a><a href="#engineering">Engineering</a><a href="./trust-lab.html#csv">Upload CSV & assurance</a></nav>
+<a href="#overview">Overview</a><a href="#lab">Recommendation lab</a><a href="#cold">Cold-start discovery</a><a href="#audit">Evaluation audit</a><a href="#engineering">Engineering</a><a href="./trust-lab.html#csv">Upload CSV & assurance</a><a href="./benchmark.html">Real-data benchmark</a></nav>
 <main id="main" tabindex="-1">
 <section id="overview" data-panel class="page">
 <p class="eyebrow">AN OPEN-SOURCE ENGINEERING CASE STUDY</p><h1>Recommendations worth <em>explaining.</em></h1><p class="lead">Explore a working hybrid ranking system—and the evaluation mistakes that can make weak models look extraordinary. This is a transparent research demonstration, not an Amazon production replica.</p>
-<div class="hero-actions"><a class="btn" href="#lab">Explore the ranking lab <span>↗</span></a><a class="btn muted" href="#audit">Inspect the evidence</a><a class="btn muted" href="./trust-lab.html#csv">Audit your own CSV</a></div>
+<div class="hero-actions"><a class="btn" href="#lab">Explore the ranking lab <span>↗</span></a><a class="btn muted" href="#audit">Inspect the evidence</a><a class="btn muted" href="./trust-lab.html#csv">Audit your own CSV</a><a class="btn muted" href="./benchmark.html">Explore real-data benchmark</a></div>
 <div class="stats"><div class="stat"><small>RAW SNAPSHOT RECORDS</small><strong>1,465</strong><span>Private educational source</span></div><div class="stat"><small>UNIQUE PRODUCTS</small><strong>1,351</strong><span>After SKU consolidation</span></div><div class="stat"><small>SAMPLED USERS</small><strong>9,050</strong><span>Reviewer IDs, not buyers</span></div><div class="stat"><small>STRICT ELIGIBLE USERS</small><strong>201</strong><span>Distinct review-event holdout</span></div></div>
 <h2>The headline result is a correction.</h2><div class="comparison"><div><small>NAIVE HYBRID HIT RATE@5</small><strong class="invalid">81.67%</strong><span>Contaminated by duplicate review events</span></div><b aria-hidden="true">→</b><div><small>STRICT HYBRID HIT RATE@5</small><strong class="valid">3.48%</strong><span>Review-event-decontaminated evaluation</span></div></div>
 <p class="note">The original item-level train/test split leaked the same review events across product SKUs. 749 of 911 test users were affected. The corrected benchmark is small and retrospective; it is not evidence of online click, conversion, or revenue lift.</p>
+<div class="panel"><h3>New: authentic ratings benchmark</h3>
+<p>On a separately licensed, genuine MovieLens 100K research dataset, the fixed 60/40 hybrid reached <strong>44.22% HR@5</strong> compared with <strong>46.26%</strong> for the popularity baseline. The honest outcome: complexity did not guarantee better offline ranking. 96/147 test users had no positive training history.</p>
+<a href="./benchmark.html">Inspect real-data methods, confidence intervals and score drift</a></div>
 <h2>Choose an investigation</h2><div class="tiles"><a href="#lab"><span>01 / INTERACTIVE</span><h3>Recommendation laboratory</h3><p>Compare content, collaborative, hybrid and popularity with configurable ranking constraints.</p></a><a href="#cold"><span>02 / COLD START</span><h3>Products with no reviews</h3><p>Test metadata-based discovery for entirely unseen products.</p></a><a href="#audit"><span>03 / RESEARCH</span><h3>Evaluation integrity</h3><p>See where inflated accuracy came from and what the evidence can actually support.</p></a></div>
 </section>
 <section id="lab" data-panel class="page" hidden>

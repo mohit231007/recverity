@@ -1,6 +1,7 @@
 // A free, browser-local LSA + lexical document retriever, NOT a generative LLM.
 // Every answer comes from authored project text and is accompanied by a source URL.
 export const KNOWLEDGE=[
+ {"id":"realbenchmark","title":"What happened in the authentic ratings benchmark?","text":"The separate, official MovieLens 100K rating experiment used 80,003 chronological train, 9,997 validation and 10,000 test rating events. On 147 eligible test users, popularity and content each achieved 46.26% Hit Rate at 5, hybrid 44.22%, and collaborative 42.18%. Hybrid coverage at 10 was 14.17% compared with popularity 4.27%. 96 test users had no positive training history and shared popularity fallback. Validation to test hybrid HR-at-five change was -0.11 percentage points, 95% independent-user bootstrap [-10.15,+11.97] points, not an established deterioration. These are movie-rating results, not Amazon purchases or online lift.","url":"https://github.com/mohit231007/recverity/blob/main/docs/REAL_BENCHMARK_REPORT.md"},
  {id:"leakage",title:"Why did 81.67% become 3.48%?",text:"The naive holdout allowed the same review event to appear in training under another product SKU. Review-event leakage affected 749 of 911 held-out users. The stricter review-event split evaluated 201 eligible users, with 3.48% Hit Rate at five for content and hybrid. The numbers are not conversion rates.",url:"https://github.com/mohit231007/recverity/blob/main/docs/MODEL_CARD.md"},
  {id:"ratings",title:"What is known about the Scaler ratings?",text:"The educational Amazon snapshot contains product-level average ratings and comma-separated sampled user IDs. It does not contain each user's own star rating, purchases, impressions or timestamps. Never turn an aggregate product rating into an individual user's preference.",url:"https://github.com/mohit231007/recverity/blob/main/docs/MODEL_CARD.md"},
  {id:"drift",title:"What do drift indicators mean?",text:"Population Stability Index for price and Jensen-Shannon distance for categories and availability compare reference and current data distributions. A Kolmogorov Smirnov D statistic gives an additional nonparametric price shift diagnostic. Alerts use heuristic thresholds, not p-values. Changes require investigation, not automatic retraining.",url:"https://github.com/mohit231007/recverity/blob/main/docs/QUALITY_GATES.md"},
@@ -13,6 +14,7 @@ export const KNOWLEDGE=[
  {id:"monitor",title:"What needs monitoring in production?",text:"Monitor schema validity, missing and anomalous prices, category mix, inventory status, candidate coverage, model score distribution, exposure diversity, latency, and delayed labeled outcomes. Drift alone is not concept drift or model performance decay. Human review is needed before any rollback or retraining decision.",url:"https://github.com/mohit231007/recverity/blob/main/docs/QUALITY_GATES.md"}
 ];
 const CANON={
+ realbenchmark:["46.26","44.22","real results","benchmark outcome","model comparison","movielens 100k"],
  leak:["leak","contamination","overlap","inflated","81","3.48","duplicate","review reuse"],
  drift:["drift","shift","distribution","psi","jensen","monitor","skew","stock"],
  ratings:["star","rating","aggregate","reviewer","label"],
@@ -75,6 +77,7 @@ export function answer(query,index=createIndex()){
  // General queries still use the TF-IDF + latent semantic ranking above.
  const normalized=String(query).toLowerCase();
  const topicRoutes=[
+  {pattern:/46[.,]?26|44[.,]?22|real.*(benchmark|results)|benchmark.*(results|winner|outcome)/,id:"realbenchmark"},
   {pattern:/81[.,]?67|3[.,]?48|review.event.*(overlap|reuse|leak)|leakage/,id:"leakage"},
   {pattern:/jensen|population stability|category mix|distribution.*(drift|shift)|\bpsi\b/,id:"drift"},
   {pattern:/each.*star|individual.*rating|shopper.*star|user.*rating/,id:"ratings"},

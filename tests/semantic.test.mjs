@@ -27,3 +27,10 @@ test("responses have provenance and nonprobabilistic disclosure",()=>{
  assert.ok(r.found);assert.match(r.sources[0].url,/github.com/);
  assert.match(r.disclosure,/not a confidence probability/);
 });
+
+test("real-data research figures retrieve the documented, domain-separated result",()=>{
+ const r=answer("Why did the hybrid get 44.22% versus 46.26% on MovieLens real benchmark?",idx);
+ assert.equal(r.found,true);
+ assert.equal(r.sources[0].id,"realbenchmark");
+ assert.match(r.text,/147 eligible test users/);
+});

@@ -1,0 +1,360 @@
+{
+  "benchmark_version": "1.0.0",
+  "dataset": "MovieLens 100K (user-level star ratings; movie domain; separate from Amazon snapshot)",
+  "drift": {
+    "interpretation": "Descriptive score-distribution and label-based ranking-quality shifts across two later cohorts using a single frozen training model. Cohort composition may differ; neither a KS D nor PSI is a significance or concept-drift test. HR differences do not establish causal online impact.",
+    "label_positive_rate_delta": -0.0047,
+    "label_positive_rate_test": 0.5629,
+    "label_positive_rate_validation": 0.5676,
+    "models": {
+      "collaborative": {
+        "hr@5_ci_excludes_zero": false,
+        "hr@5_delta_95pct_independent_user_bootstrap": [
+          -0.1279,
+          0.0828
+        ],
+        "hr@5_test_minus_validation": -0.0215,
+        "test_users": 147,
+        "top1_score_ks_d": 0.0582,
+        "top1_score_mean_delta": 0.0124,
+        "top1_score_psi": 0.006,
+        "validation_users": 185
+      },
+      "content": {
+        "hr@5_ci_excludes_zero": false,
+        "hr@5_delta_95pct_independent_user_bootstrap": [
+          -0.0973,
+          0.1124
+        ],
+        "hr@5_test_minus_validation": 0.0031,
+        "test_users": 147,
+        "top1_score_ks_d": 0,
+        "top1_score_mean_delta": 0,
+        "top1_score_psi": 0,
+        "validation_users": 185
+      },
+      "hybrid": {
+        "hr@5_ci_excludes_zero": false,
+        "hr@5_delta_95pct_independent_user_bootstrap": [
+          -0.1015,
+          0.1197
+        ],
+        "hr@5_test_minus_validation": -0.0011,
+        "test_users": 147,
+        "top1_score_ks_d": 0.069,
+        "top1_score_mean_delta": 0.0096,
+        "top1_score_psi": 0.0198,
+        "validation_users": 185
+      },
+      "popularity": {
+        "hr@5_ci_excludes_zero": false,
+        "hr@5_delta_95pct_independent_user_bootstrap": [
+          -0.1062,
+          0.1008
+        ],
+        "hr@5_test_minus_validation": -0.0131,
+        "test_users": 147,
+        "top1_score_ks_d": 0.0301,
+        "top1_score_mean_delta": 0.0066,
+        "top1_score_psi": 0.0053,
+        "validation_users": 185
+      }
+    },
+    "user_cluster_bootstrap_resamples": 300
+  },
+  "items_sha256": "553841ebc7de3a0fd0d6b62a204ea30c1e651aacfb2814c7a6584ac52f2c5701",
+  "limitations": [
+    "Film recommendations do not represent e-commerce behavior.",
+    "Ratings lack impressions and true exposure negatives; no online uplift measured.",
+    "A fixed 60/40 fusion is not selected by validation and is not calibrated.",
+    "Users with test positives on unknown cold items are partially excluded and counted separately.",
+    "Prediction-score drift compares different user cohorts with a frozen train model, not causal within-user changes.",
+    "Missing exposure logs, delayed feedback and stochastic uncertainty limit interpretation of drift diagnostics.",
+    "A capped deterministic sample of users is used for evaluation; report before-cap counts.",
+    "Model uses genre metadata and positive co-interaction similarity, not embeddings."
+  ],
+  "provenance": "https://grouplens.org/datasets/movielens/100k/",
+  "ratings_sha256": "06416e597f82b7342361e41163890c81036900f418ad91315590814211dca490",
+  "settings": {
+    "bootstraps": 300,
+    "candidate_set": "all train-observed items excluding user's train-rated items",
+    "cold_user_fallback": "training-only popularity",
+    "evaluation_user_cap": 300,
+    "hybrid_cf_weight": 0.6,
+    "hybrid_content_weight": 0.4,
+    "positive_label_min": 4,
+    "seed": 2307
+  },
+  "split": {
+    "strategy": "global_timestamp_boundary_80_10_10",
+    "test_events": 10000,
+    "test_min_time": 891382309,
+    "train_events": 80003,
+    "train_max_time": 889237269,
+    "validation_events": 9997,
+    "validation_max_time": 891382267,
+    "validation_min_time": 889237297
+  },
+  "test": {
+    "cold_item_positive_events": 66,
+    "eligible_users": 147,
+    "eligible_users_before_cap": 147,
+    "heldout_positive_events": 5629,
+    "models": {
+      "collaborative": {
+        "catalog_coverage_at_10": 0.1374,
+        "elapsed_seconds": 0.062,
+        "evaluated_users": 147,
+        "history_free_users": 96,
+        "hr@10": 0.5782,
+        "hr@5": 0.4218,
+        "hr@5_95pct_user_bootstrap": [
+          0.3401,
+          0.4966
+        ],
+        "ndcg@10": 0.2254,
+        "ndcg@5": 0.2398,
+        "recall@10": 0.0644,
+        "recall@5": 0.0328,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5521,
+            "users": 96
+          },
+          "returning_3_plus": {
+            "hr@5": 0.1765,
+            "users": 51
+          }
+        },
+        "top1_rank_score_mean": 0.8718,
+        "top1_rank_score_p50": 1
+      },
+      "content": {
+        "catalog_coverage_at_10": 0.0619,
+        "elapsed_seconds": 0.066,
+        "evaluated_users": 147,
+        "history_free_users": 96,
+        "hr@10": 0.619,
+        "hr@5": 0.4626,
+        "hr@5_95pct_user_bootstrap": [
+          0.381,
+          0.5306
+        ],
+        "ndcg@10": 0.2318,
+        "ndcg@5": 0.2456,
+        "recall@10": 0.0702,
+        "recall@5": 0.0352,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5521,
+            "users": 96
+          },
+          "returning_3_plus": {
+            "hr@5": 0.2941,
+            "users": 51
+          }
+        },
+        "top1_rank_score_mean": 1,
+        "top1_rank_score_p50": 1
+      },
+      "hybrid": {
+        "catalog_coverage_at_10": 0.1417,
+        "elapsed_seconds": 0.063,
+        "evaluated_users": 147,
+        "history_free_users": 96,
+        "hr@10": 0.5986,
+        "hr@5": 0.4422,
+        "hr@5_95pct_user_bootstrap": [
+          0.3605,
+          0.5138
+        ],
+        "ndcg@10": 0.2281,
+        "ndcg@5": 0.2433,
+        "recall@10": 0.0664,
+        "recall@5": 0.0381,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5521,
+            "users": 96
+          },
+          "returning_3_plus": {
+            "hr@5": 0.2353,
+            "users": 51
+          }
+        },
+        "top1_rank_score_mean": 0.9176,
+        "top1_rank_score_p50": 1
+      },
+      "popularity": {
+        "catalog_coverage_at_10": 0.0427,
+        "elapsed_seconds": 0.913,
+        "evaluated_users": 147,
+        "history_free_users": 96,
+        "hr@10": 0.6327,
+        "hr@5": 0.4626,
+        "hr@5_95pct_user_bootstrap": [
+          0.381,
+          0.5374
+        ],
+        "ndcg@10": 0.2396,
+        "ndcg@5": 0.2555,
+        "recall@10": 0.0742,
+        "recall@5": 0.0361,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5521,
+            "users": 96
+          },
+          "returning_3_plus": {
+            "hr@5": 0.2941,
+            "users": 51
+          }
+        },
+        "top1_rank_score_mean": 0.9215,
+        "top1_rank_score_p50": 1
+      }
+    }
+  },
+  "train": {
+    "fit_seconds": 0.868,
+    "positive_events": 44072,
+    "unique_items": 1616,
+    "unique_users": 751
+  },
+  "validation": {
+    "cold_item_positive_events": 29,
+    "eligible_users": 185,
+    "eligible_users_before_cap": 185,
+    "heldout_positive_events": 5674,
+    "models": {
+      "collaborative": {
+        "catalog_coverage_at_10": 0.1677,
+        "elapsed_seconds": 0.108,
+        "evaluated_users": 185,
+        "history_free_users": 116,
+        "hr@10": 0.6162,
+        "hr@5": 0.4432,
+        "hr@5_95pct_user_bootstrap": [
+          0.3727,
+          0.5189
+        ],
+        "ndcg@10": 0.2188,
+        "ndcg@5": 0.2383,
+        "recall@10": 0.0674,
+        "recall@5": 0.0309,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5948,
+            "users": 116
+          },
+          "returning_3_plus": {
+            "hr@5": 0.1912,
+            "users": 68
+          },
+          "sparse_1_2": {
+            "hr@5": 0,
+            "users": 1
+          }
+        },
+        "top1_rank_score_mean": 0.8594,
+        "top1_rank_score_p50": 1
+      },
+      "content": {
+        "catalog_coverage_at_10": 0.0718,
+        "elapsed_seconds": 0.118,
+        "evaluated_users": 185,
+        "history_free_users": 116,
+        "hr@10": 0.6324,
+        "hr@5": 0.4595,
+        "hr@5_95pct_user_bootstrap": [
+          0.3946,
+          0.5326
+        ],
+        "ndcg@10": 0.2257,
+        "ndcg@5": 0.2455,
+        "recall@10": 0.0815,
+        "recall@5": 0.0469,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5948,
+            "users": 116
+          },
+          "returning_3_plus": {
+            "hr@5": 0.2353,
+            "users": 68
+          },
+          "sparse_1_2": {
+            "hr@5": 0,
+            "users": 1
+          }
+        },
+        "top1_rank_score_mean": 1,
+        "top1_rank_score_p50": 1
+      },
+      "hybrid": {
+        "catalog_coverage_at_10": 0.1733,
+        "elapsed_seconds": 0.112,
+        "evaluated_users": 185,
+        "history_free_users": 116,
+        "hr@10": 0.627,
+        "hr@5": 0.4432,
+        "hr@5_95pct_user_bootstrap": [
+          0.3755,
+          0.5135
+        ],
+        "ndcg@10": 0.216,
+        "ndcg@5": 0.2318,
+        "recall@10": 0.0731,
+        "recall@5": 0.0368,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5948,
+            "users": 116
+          },
+          "returning_3_plus": {
+            "hr@5": 0.1912,
+            "users": 68
+          },
+          "sparse_1_2": {
+            "hr@5": 0,
+            "users": 1
+          }
+        },
+        "top1_rank_score_mean": 0.908,
+        "top1_rank_score_p50": 1
+      },
+      "popularity": {
+        "catalog_coverage_at_10": 0.0446,
+        "elapsed_seconds": 2.297,
+        "evaluated_users": 185,
+        "history_free_users": 116,
+        "hr@10": 0.6486,
+        "hr@5": 0.4757,
+        "hr@5_95pct_user_bootstrap": [
+          0.4,
+          0.5434
+        ],
+        "ndcg@10": 0.2374,
+        "ndcg@5": 0.256,
+        "recall@10": 0.0863,
+        "recall@5": 0.049,
+        "subgroups": {
+          "history_free": {
+            "hr@5": 0.5948,
+            "users": 116
+          },
+          "returning_3_plus": {
+            "hr@5": 0.2647,
+            "users": 68
+          },
+          "sparse_1_2": {
+            "hr@5": 1,
+            "users": 1
+          }
+        },
+        "top1_rank_score_mean": 0.9149,
+        "top1_rank_score_p50": 1
+      }
+    }
+  }
+}

@@ -29,3 +29,7 @@ The built-in fixture demonstrates three separate failures. The upload checker co
 ## Out-of-scope until connected to production telemetry
 
 Performance and business drift require real timestamped impressions, candidate/ranker versions, click or purchase labels, item inventory state, delayed outcome windows, safeguards against selection bias, and controlled A/B experiments. RecVerity does not claim these are currently available.
+
+## Verified offline score/performance drift on real ratings
+
+The [MovieLens 100K run](REAL_BENCHMARK_REPORT.md) records top-1 ranking-score PSI and KS D between validation and test cohorts scored by a **frozen model**. Independent-user bootstrap intervals for HR@5 test-minus-validation include zero for every method, so **measurable performance deterioration was not established**. The drift diagnostics are cross-cohort, not live monitoring, and should not trigger automatic retraining. A zero PSI for content means the coarse genre cosine scores saturated, not absence of real-world feature change.

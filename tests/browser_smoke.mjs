@@ -72,6 +72,14 @@ try{
  await page.waitForFunction(()=>document.querySelector("#catalog-report")?.textContent?.includes("DRIFT"));
  assert.match(await page.locator("#catalog-report").innerText(),/DRIFT/);
   await page.screenshot({path:"artifacts/desktop-research-assurance.png",fullPage:true});
+ await page.goto("http://127.0.0.1:8000/benchmark.html",{waitUntil:"networkidle"});
+ await page.locator("#benchmark-models .benchmark-model").first().waitFor();
+ assert.equal(await page.locator("#benchmark-models .benchmark-model").count(),4);
+ assert.match(await page.locator("#benchmark-body").innerText(),/46\.26%/);
+ assert.match(await page.locator("#benchmark-cold").innerText(),/96 of 147/);
+ assert.equal(await page.locator("#benchmark-error").isVisible(),false);
+ await page.screenshot({path:"artifacts/desktop-real-benchmark.png",fullPage:true});
+
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
  mobile.on("pageerror",e=>errors.push(e.message));
  await mobile.goto("http://127.0.0.1:8000/",{waitUntil:"networkidle"});
@@ -87,6 +95,11 @@ try{
  await mobile.locator("#mobile-links a[href='#csv']").click();
  await mobile.locator("#catalog-run").waitFor();
  await mobile.screenshot({path:"artifacts/mobile-research-assurance.png",fullPage:true});
+ await mobile.goto("http://127.0.0.1:8000/benchmark.html",{waitUntil:"networkidle"});
+ await mobile.locator("#benchmark-models .benchmark-model").first().waitFor();
+ assert.equal(await mobile.locator("#benchmark-models .benchmark-model").count(),4);
+ await mobile.screenshot({path:"artifacts/mobile-real-benchmark.png",fullPage:true});
+ assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
  assert.deepEqual(errors,[]);
  console.log("PASS desktop/mobile navigation, ranking, guest fallback, cold start, audit and browser errors");
 }finally{await browser.close();}
