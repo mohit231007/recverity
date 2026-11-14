@@ -13,7 +13,7 @@
 <div class="workspace"><header class="top"><button id="menu" class="mobile-menu" type="button" aria-expanded="false" aria-controls="mobile-links">☰ Menu</button>
 <div>RESEARCH STUDIO <span class="sep">/</span> ASSURANCE & SEMANTIC SEARCH</div><div class="top-right"><span class="live-dot"></span> ON-DEVICE PROCESSING</div></header>
 <nav class="mobile-links" id="mobile-links" hidden aria-label="Mobile navigation">
-<a href="./index.html#lab">Recommendations</a><a href="./index.html#audit">Evaluation audit</a><a href="#drift">Drift checks</a><a href="#leakage">Leakage checks</a><a href="#csv">Upload CSV</a><a href="#assistant">Local assistant</a></nav>
+<a href="./index.html#lab">Recommendations</a><a href="./index.html#audit">Evaluation audit</a><a href="#drift">Drift checks</a><a href="#leakage">Leakage checks</a><a href="#csv">Upload CSV</a><a href="#sandbox">Your recommendations</a><a href="#assistant">Local assistant</a></nav>
 <main id="main" tabindex="-1"><section class="page">
 <p class="eyebrow">RESEARCH QUALITY / MODEL RISK</p>
 <h1>Trust the evidence, <em>not the score.</em></h1>
@@ -54,7 +54,22 @@
 <p class="muted-text">These files stay in your browser's memory during the page session. Reload to clear them. The CSV workbench audits inputs; it does not train a production model, prove causal uplift, or create a database. If you need scalable recurring ingestion, versioned joins or live inference, a managed data pipeline becomes a separate project.</p>
 </section>
 
-<section id="assistant" class="assurance-section" aria-labelledby="ask-title"><p class="eyebrow">04 / LOCAL SEMANTIC RESEARCH</p>
+<section id="sandbox" class="assurance-section" aria-labelledby="sandbox-title">
+<p class="eyebrow">04 / YOUR CATALOG / IN-BROWSER RECOMMENDATIONS</p><h2 id="sandbox-title">Run the recommender on your CSV</h2>
+<p>The catalog from <strong>Reference catalog CSV</strong> and the interactions from <strong>Training interactions CSV</strong> are used for local recommendations. The test interactions file is never used for ranking. User ratings of 4–5 count as positive; missing event ratings are treated as implicit interaction signals. Negative and previously viewed items are excluded. No SQL or full N×N matrix is required.</p>
+<div class="panel">
+<div class="qa-form">
+<label for="own-user">User ID (optional; first user used if blank)<input type="text" id="own-user" placeholder="e.g. u1" maxlength="120"/></label>
+<label for="own-anchor">Or anchor product ID for metadata similarity<input type="text" id="own-anchor" placeholder="e.g. p1" maxlength="120"/></label>
+<label for="own-method">Ranking method<select id="own-method"><option value="hybrid">Hybrid (60% CF / 40% content)</option><option value="content">Content similarity</option><option value="collaborative">Item co-interactions</option><option value="popularity">Interaction popularity</option></select></label>
+<label for="own-budget">Max price (blank = no limit)<input type="number" id="own-budget" min="1" step="1" placeholder="No limit"/></label></div>
+<div class="qa-actions"><button id="own-run" type="button" class="btn small">Generate top-5 from CSV</button><button id="own-example" type="button" class="btn secondary small">Run synthetic example</button></div>
+<div class="qa-result" id="own-context" role="status" aria-live="polite">Choose a local catalog in the first CSV panel and optional training interactions in the second.</div>
+<div id="own-results" class="qa-recommendations"></div></div>
+<p class="muted-text">This is a bounded explanatory sandbox: up to 10,000 catalog products and 10,000 interactions, with limited history depth and neighbor exploration. Scores are uncalibrated similarities, not probabilities. Recommendation accuracy cannot be estimated without an independent held-out labeled test set.</p>
+</section>
+
+<section id="assistant" class="assurance-section" aria-labelledby="ask-title"><p class="eyebrow">05 / LOCAL SEMANTIC RESEARCH</p>
 <h2 id="ask-title">Ask RecVerity</h2><p>An on-device low-rank semantic retriever finds the closest project note and returns its authored explanation with a citation. No paid model, network inference, or invented answers.</p>
 <div class="panel qa-chat"><form id="ask-form"><label for="question">Ask a question about the project<input type="text" id="question" maxlength="350" autocomplete="off" placeholder="Why did a high hit rate collapse after removing leakage?"/></label>
 <div class="qa-actions"><button type="submit" class="btn small">Find grounded answer</button><button type="button" class="btn secondary small" id="ask-sample">Ask about drift</button></div></form>

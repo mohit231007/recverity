@@ -24,6 +24,7 @@ export function parseCSV(text,{maxRows=MAX_ROWS}={}){
  }
  if(quoted)throw new Error("CSV has an unclosed quoted field.");
  if(cell.length||row.length){row.push(cell);if(row.some(x=>x.trim()))out.push([...row]);}
+ if(out.length>maxRows+1)throw new Error("CSV exceeds "+maxRows+" data rows.");
  if(!out.length)throw new Error("Empty CSV.");
  const header=out.shift().map(s=>s.trim().toLowerCase().replace(/\s+/g,"_"));
  if(header.some(x=>!x)||new Set(header).size!==header.length)throw new Error("CSV headers must be unique and nonempty.");
@@ -46,7 +47,7 @@ export function normalizeCatalog(parsed){
   const rating=nvalue(choose(r,["rating"]));
   const rawStock=choose(r,["available","in_stock"]);
   return {id:choose(r,["product_id","item_id","id"]),name:choose(r,["product_name","name","title"])||"",
-   category:choose(r,["category","main_category"])||"Unknown",price,rating,
+   category:choose(r,["category","main_category"])||"Unknown",description:choose(r,["about_product","description"])||"",price,rating,
    available:rawStock==null?null:/^(true|1|yes|available)$/i.test(rawStock),
    row:i+2};
  });

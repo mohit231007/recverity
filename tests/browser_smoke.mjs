@@ -44,6 +44,9 @@ try{
  assert.match(await page.locator("#catalog-report").innerText(),/REFERENCE/);
  await page.locator("#ask-sample").click();
  assert.match(await page.locator("#answer").innerText(),/source/i);
+ await page.locator("#own-example").click();
+ await page.locator("#own-results .qa-recommendation").first().waitFor();
+ assert.ok(await page.locator("#own-results .qa-recommendation").count()>=1);
  await page.screenshot({path:"artifacts/desktop-research-assurance.png",fullPage:true});
  const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
  mobile.on("pageerror",e=>errors.push(e.message));

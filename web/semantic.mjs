@@ -61,7 +61,11 @@ export function retrieve(query,index=createIndex(),k=3){
  const latent=index.vectors.map((e,i)=>dot.reduce((s,x,j)=>s+x*e[j],0)/Math.sqrt(index.eigenvalues[i]));
  return index.documents.map((d,i)=>{
   const emb=index.vectors.map((e,j)=>e[i]*Math.sqrt(index.eigenvalues[j]));
-  const score=.72*dot[i]+.28*Math.max(0,cosine(latent,emb));
+  const queryLower=String(query).toLowerCase();
+  const intentTerms=CANON[d.id]||[];
+  const matched=intentTerms.reduce((n,term)=>n+(queryLower.includes(term)?1:0),0);
+  const boost=Math.min(.52,.13*matched);
+  const score=.57*dot[i]+.23*Math.max(0,cosine(latent,emb))+boost;
   return {...d,score};
  }).sort((a,b)=>b.score-a.score).slice(0,k);
 }

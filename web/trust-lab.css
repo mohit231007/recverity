@@ -19,3 +19,10 @@
 .qa-answer small{color:#6d8190}.qa-chat .panel{max-width:840px}
 @media(max-width:900px){.qa-grid,.qa-form{grid-template-columns:1fr}}
 @media(max-width:530px){.qa-checks{grid-template-columns:1fr}.qa-result,.qa-answer{padding:12px}}
+
+.qa-recommendations{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.qa-recommendation{padding:18px;border-radius:10px;border:1px solid #d8e7e8;background:#fff}
+.qa-recommendation strong{font-size:13px;color:#1a4c58;display:block;overflow-wrap:anywhere}
+.qa-recommendation p{font-size:11px;margin:7px 0!important}
+.qa-recommendation small{color:#247c77;font-size:11px}
+@media(max-width:740px){.qa-recommendations{grid-template-columns:1fr}}

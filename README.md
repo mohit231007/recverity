@@ -17,7 +17,7 @@ RecVerity is an independent, open-source recommendation engineering lab by **Moh
 - Export current synthetic ranked results as JSON.
 - A separate evaluation audit exposing dramatic review-event leakage.
 - A **Research Assurance** page with event/pair/chronological leakage fixtures, price/category/inventory drift diagnostics, browser-local CSV upload auditing, and an on-device semantic research assistant.
-- Two uploaded catalog files can be compared as reference/current distributions, while two event files can be audited as train/test. Uploaded data are never sent to a backend.
+- Two uploaded catalog files can be compared as reference/current distributions, while two event files can be audited as train/test. You can also generate top-5 recommendations **directly from uploaded catalog and training interactions CSVs**, using content similarity, co-interaction signals, hybrid scoring or popularity fallback. Uploaded data are never sent to a backend.
 
 ## Research result — evidence boundaries
 
@@ -59,6 +59,15 @@ After this PR merges, select **Settings → Pages → Build and deployment → S
 ## Local data science workbench
 
 Open [Research Assurance](https://mohit231007.github.io/recverity/trust-lab.html) to investigate simulated drift and leakage, upload two local CSV files for validation/comparison, or ask the free local document retriever a grounded question. **All CSV parsing happens in the browser; no SQL, server, or API key is required.** The assistant performs deterministic semantic search over authored notes, not generative LLM chat. See [CSV schema](docs/CSV_SCHEMA.md), [quality gates](docs/QUALITY_GATES.md) and [assistant design](docs/LOCAL_ASSISTANT.md).
+
+## Authentic ratings benchmark
+
+A standalone `research/benchmark.py` runner accepts the officially downloaded **MovieLens 100K** `u.data` and `u.item` files to produce aggregate, reproducible chronological benchmark reports. This movie-domain benchmark is separate from the e-commerce Scaler research and no MovieLens outcomes are presented as verified yet. Tests use fictional fixtures only. **The dataset is not redistributed.** See [benchmark protocol](docs/BENCHMARK_PROTOCOL.md) and [GroupLens license](https://grouplens.org/datasets/movielens/100k/).
+
+Run:
+```bash
+python research/benchmark.py --ratings ./ml-100k/u.data --items ./ml-100k/u.item --max-users 200 --output ./recverity-benchmark.json
+```
 
 ## Scientific upgrade roadmap
 

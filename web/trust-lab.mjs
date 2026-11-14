@@ -1,4 +1,5 @@
 import {createCatalog} from "./engine.mjs";
+import {buildUploadedLab,recommendUploaded} from "./upload-recommender.mjs";
 import {monitorCatalog,simulateCurrent,demoEventSplit,auditEventSplit} from "./quality.mjs";
 import {createIndex,answer} from "./semantic.mjs";
 import {parseCSV,readCsvFile,normalizeCatalog,normalizeInteractions,DEMO_CATALOG_CSV,DEMO_TRAIN_CSV,DEMO_TEST_CSV} from "./csv-lab.mjs";
@@ -106,6 +107,55 @@ function renderAnswer(query){
  const caveat=document.createElement("small");caveat.textContent=r.disclosure||"No grounded match; no generative model or remote inference used.";
  target.append(caveat);
 }
+
+async function ownRecommendations(example=false){
+ const context=el("own-context"),results=el("own-results");
+ clearTo(context);results.replaceChildren();
+ try{
+  const p=example?parseCSV(DEMO_CATALOG_CSV):await readCsvFile(el("catalog-ref").files[0]);
+  const catalog=normalizeCatalog(p);
+  if(catalog.invalidRows||catalog.duplicates||catalog.warnings.some(w=>/rating/.test(w)))
+   throw new Error("Resolve catalog validation problems before ranking.");
+  const source=el("events-train").files[0];
+  const eventParsed=example?parseCSV(DEMO_TRAIN_CSV):source?await readCsvFile(source):null;
+  const eventData=eventParsed?normalizeInteractions(eventParsed):null;
+  if(eventData&&(eventData.invalidRows||eventData.warnings.some(w=>/rating values/.test(w))))
+   throw new Error("Resolve invalid event identifiers or rating scores before ranking.");
+  const model=buildUploadedLab(catalog.items,eventData?.events||[]);
+  const anchor=example?"":el("own-anchor").value.trim();
+  const user=example?"u1":el("own-user").value.trim()||(anchor?"":eventData?.events[0]?.userId||"");
+  if(!model.userEvents.size&&!anchor&&!example)
+   throw new Error("Provide training interactions, or an anchor product ID for content-only recommendations.");
+  if(anchor&&!model.byId.has(anchor))throw new Error("Anchor product ID is not in the uploaded catalog.");
+  const rawBudget=el("own-budget").value.trim();
+  const budget=rawBudget?Number(rawBudget):Infinity;
+  if(!Number.isFinite(budget)&&rawBudget||budget<=0)throw new Error("Budget must be a positive number.");
+  const query={userId:user,anchorId:anchor,method:el("own-method").value,weight:.6,k:5,budget};
+  const output=recommendUploaded(model,query);
+  appendLine(context,(example?"SYNTHETIC EXAMPLE · ":"YOUR PRIVATE CSV · ")+"Products: "+model.items.length+
+    " · Valid interactions: "+(eventData?.events.length||0)+" · Selected user: "+(user||"none")+
+    " · Eligible candidates: "+output.context.eligibleCandidates+
+    " · History items: "+output.context.historyCount+
+    " · Result mode: "+(output.recommendations[0]?.method||"none"));
+  if(eventData?.events.some(e=>e.rating==null))appendLine(context,"Missing event ratings are treated as implicit interactions, not invented stars.");
+  for(const warning of model.warnings)appendLine(context,"NOTICE: "+warning);
+  appendLine(context,"Recommendation explanations are descriptive, not calibrated purchase probabilities.");
+  if(!output.recommendations.length){appendLine(context,"No eligible recommendations. Check inventory, budget or available item history.");return;}
+  for(let i=0;i<output.recommendations.length;i++){
+   const rec=output.recommendations[i],card=document.createElement("article");card.className="qa-recommendation";
+   const headline=document.createElement("strong");headline.textContent=(i+1)+". "+(rec.name||rec.id)+" ("+rec.id+")";
+   const details=document.createElement("p");details.textContent=(rec.category||"Unknown")+
+    " · Price "+rec.price+" · Rank score "+rec.score.toFixed(3)+
+    " · CF "+rec.collaborative.toFixed(3)+" · Content "+rec.content.toFixed(3)+
+    " · Popularity "+rec.popularity.toFixed(3);
+   const why=document.createElement("small");why.textContent=rec.reason;
+   card.append(headline,details,why);results.append(card);
+  }
+ }catch(error){context.classList.add("error");appendLine(context,error.message);}
+}
+el("own-run").addEventListener("click",()=>ownRecommendations(false));
+el("own-example").addEventListener("click",()=>ownRecommendations(true));
+
 el("scenario").addEventListener("change",renderDrift);
 el("threshold").addEventListener("input",renderDrift);
 el("leak-scenario").addEventListener("change",renderLeak);
