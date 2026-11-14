@@ -1,0 +1,63 @@
+name: Genuine Ratings Benchmark
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/real-benchmark-performance-drift]
+    paths:
+      - 'research/benchmark.py'
+      - 'tests/test_benchmark.py'
+      - '.github/workflows/real-benchmark.yml'
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify reproducible unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Download independently from GroupLens (ephemeral runner only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/recverity-real
+          curl --fail --location --silent --show-error --retry 4 --retry-delay 3 \
+            https://files.grouplens.org/datasets/movielens/ml-100k.zip -o /tmp/recverity-real/ml-100k.zip
+          echo '0e33842e24a9c977be4e0107933c0723  /tmp/recverity-real/ml-100k.zip' | md5sum --check --status
+          unzip -q /tmp/recverity-real/ml-100k.zip \
+            'ml-100k/u.data' 'ml-100k/u.item' 'ml-100k/README' -d /tmp/recverity-real
+          echo 'Official archive checksum matched. Raw data remains outside checkout.'
+      - name: Run frozen-model timestamped benchmark and drift diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/benchmark.py \
+            --ratings /tmp/recverity-real/ml-100k/u.data \
+            --items /tmp/recverity-real/ml-100k/u.item \
+            --max-users 300 \
+            --seed 2307 \
+            --output /tmp/recverity-real/aggregate.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("/tmp/recverity-real/aggregate.json")
+          r=json.loads(p.read_text())
+          assert r["split"]["train_events"] + r["split"]["validation_events"] + r["split"]["test_events"] == 100000
+          assert len(r["ratings_sha256"]) == 64
+          assert "drift" in r and "hybrid" in r["drift"]["models"]
+          assert "_internal" not in r["validation"] and "_internal" not in r["test"]
+          print("RECVERITY_AGGREGATE_JSON_BEGIN")
+          print(json.dumps(r, separators=(",", ":"), sort_keys=True))
+          print("RECVERITY_AGGREGATE_JSON_END")
+          PY
+      - name: Upload aggregate-only metrics (no raw ratings)
+        uses: actions/upload-artifact@v4
+        with:
+          name: recverity-movielens-100k-aggregate
+          path: /tmp/recverity-real/aggregate.json
+          if-no-files-found: error
+          retention-days: 30
