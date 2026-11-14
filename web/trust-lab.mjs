@@ -97,15 +97,25 @@ async function eventsReport(example=false){
  }catch(err){target.classList.add("error");appendLine(target,err.message);}
 }
 function renderAnswer(query){
- const target=el("answer");target.replaceChildren();const r=answer(query,docs);
- const body=document.createElement("blockquote");body.textContent=r.text;target.append(body);
+ const clean=String(query||"").trim();if(!clean)return;
+ const target=el("answer");
+ const placeholder=target.querySelector("[data-placeholder]");if(placeholder)placeholder.remove();
+ const userMessage=document.createElement("div");userMessage.className="chat-bubble chat-user";
+ const ulabel=document.createElement("strong");ulabel.textContent="YOU";
+ const utext=document.createElement("p");utext.textContent=clean;userMessage.append(ulabel,utext);target.append(userMessage);
+ const r=answer(clean,docs),reply=document.createElement("div");reply.className="chat-bubble chat-system";
+ const label=document.createElement("strong");label.textContent="RECVERITY · DOCUMENT RETRIEVAL";
+ const body=document.createElement("p");body.textContent=r.text;reply.append(label,body);
  if(r.sources.length){
   const s=r.sources[0],p=document.createElement("p"),a=document.createElement("a");
-  a.href=s.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Project source: "+s.title;
-  p.append(a);target.append(p);
+  a.href=s.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Grounded source: "+s.title;
+  p.append(a);reply.append(p);
  }
- const caveat=document.createElement("small");caveat.textContent=r.disclosure||"No grounded match; no generative model or remote inference used.";
- target.append(caveat);
+ const caveat=document.createElement("small");caveat.textContent=r.disclosure||
+  "No grounded match found. No generative model or remote inference used.";
+ reply.append(caveat);target.append(reply);
+ while(target.children.length>18)target.firstElementChild.remove();
+ target.scrollTop=target.scrollHeight;
 }
 
 async function ownRecommendations(example=false){
@@ -163,8 +173,9 @@ el("catalog-run").addEventListener("click",()=>catalogReport());
 el("catalog-example").addEventListener("click",()=>catalogReport(true));
 el("events-run").addEventListener("click",()=>eventsReport());
 el("events-example").addEventListener("click",()=>eventsReport(true));
-el("ask-form").addEventListener("submit",e=>{e.preventDefault();renderAnswer(el("question").value);});
-el("ask-sample").addEventListener("click",()=>{el("question").value="How does RecVerity detect data drift?";renderAnswer(el("question").value);});
+el("ask-form").addEventListener("submit",e=>{e.preventDefault();renderAnswer(el("question").value);el("question").value="";});
+el("ask-sample").addEventListener("click",()=>{renderAnswer("How does RecVerity detect data drift?");});
+el("ask-clear").addEventListener("click",()=>{el("answer").replaceChildren(item("Ask about leakage, drift, metrics or data privacy.","chat-placeholder"));});
 el("menu").addEventListener("click",()=>{const n=el("mobile-links");n.hidden=!n.hidden;el("menu").setAttribute("aria-expanded",String(!n.hidden));});
 document.querySelectorAll("#mobile-links a").forEach(a=>a.addEventListener("click",()=>{el("mobile-links").hidden=true;el("menu").setAttribute("aria-expanded","false");}));
 renderDrift();renderLeak();

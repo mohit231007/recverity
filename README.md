@@ -16,7 +16,7 @@ RecVerity is an independent, open-source recommendation engineering lab by **Moh
 - Five metadata-nearest recommendations for fictional products without reviews.
 - Export current synthetic ranked results as JSON.
 - A separate evaluation audit exposing dramatic review-event leakage.
-- A **Research Assurance** page with event/pair/chronological leakage fixtures, price/category/inventory drift diagnostics, browser-local CSV upload auditing, and an on-device semantic research assistant.
+- A **Research Assurance** page with event/pair/chronological leakage fixtures, price/category/inventory drift diagnostics, browser-local CSV upload auditing, and an on-device multi-turn semantic research assistant.
 - Two uploaded catalog files can be compared as reference/current distributions, while two event files can be audited as train/test. You can also generate top-5 recommendations **directly from uploaded catalog and training interactions CSVs**, using content similarity, co-interaction signals, hybrid scoring or popularity fallback. Uploaded data are never sent to a backend.
 
 ## Research result — evidence boundaries

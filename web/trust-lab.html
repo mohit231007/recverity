@@ -70,10 +70,10 @@
 </section>
 
 <section id="assistant" class="assurance-section" aria-labelledby="ask-title"><p class="eyebrow">05 / LOCAL SEMANTIC RESEARCH</p>
-<h2 id="ask-title">Ask RecVerity</h2><p>An on-device low-rank semantic retriever finds the closest project note and returns its authored explanation with a citation. No paid model, network inference, or invented answers.</p>
+<h2 id="ask-title">Ask RecVerity</h2><p>An on-device low-rank semantic retriever finds relevant project notes and keeps this conversation visible until you clear or reload the page. Replies return authored explanations with citations. No paid model, network inference, or invented answers.</p>
 <div class="panel qa-chat"><form id="ask-form"><label for="question">Ask a question about the project<input type="text" id="question" maxlength="350" autocomplete="off" placeholder="Why did a high hit rate collapse after removing leakage?"/></label>
-<div class="qa-actions"><button type="submit" class="btn small">Find grounded answer</button><button type="button" class="btn secondary small" id="ask-sample">Ask about drift</button></div></form>
-<div id="answer" class="qa-answer" aria-live="polite"><p>Suggested topics: data leakage, drift monitoring, cold start, ranking evaluation, privacy, and authentic ratings.</p></div></div>
+<div class="qa-actions"><button type="submit" class="btn small">Find grounded answer</button><button type="button" class="btn secondary small" id="ask-sample">Ask about drift</button><button type="button" class="btn secondary small" id="ask-clear">Clear chat</button></div></form>
+<div id="answer" class="qa-answer" role="log" aria-live="polite"><p data-placeholder>Suggested topics: data leakage, drift monitoring, cold start, ranking evaluation, privacy, and authentic ratings.</p></div></div>
 </section>
 <footer>RecVerity · Independent research by Mohit Bhatnagar · <a href="./index.html#overview">Back to overview</a> · <a href="https://github.com/mohit231007/recverity">GitHub source</a></footer>
 </section></main></div></div><script type="module" src="./trust-lab.mjs"></script></body></html>

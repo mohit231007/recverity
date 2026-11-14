@@ -26,3 +26,11 @@
 .qa-recommendation p{font-size:11px;margin:7px 0!important}
 .qa-recommendation small{color:#247c77;font-size:11px}
 @media(max-width:740px){.qa-recommendations{grid-template-columns:1fr}}
+
+.qa-answer{max-height:470px;overflow:auto;display:grid;gap:12px;align-content:start}
+.chat-bubble{padding:12px 15px;border-radius:12px;border:1px solid var(--border);background:white}
+.chat-bubble strong{font-size:10px;letter-spacing:.1em;color:#487480}
+.chat-bubble p{font-size:12px!important;margin:8px 0!important}
+.chat-bubble.chat-user{background:#e8f4f1;margin-left:12%}
+.chat-bubble.chat-system{margin-right:9%}
+.chat-bubble a{font-size:11px}
